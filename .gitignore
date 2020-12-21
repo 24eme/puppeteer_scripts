@@ -1,0 +1,6 @@
+*~
+tags
+*.swp
+*.swo
+config/*.config.json
+node_modules/
