@@ -4,3 +4,5 @@ tags
 *.swo
 config/*.config.json
 node_modules/
+out/
+!out/.gitkeep

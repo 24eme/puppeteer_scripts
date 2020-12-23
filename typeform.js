@@ -2,6 +2,10 @@ const config = require('./config/typeform.config.json');
 const puppeteer = require('puppeteer');
 const puppeteerExtra = require('puppeteer-extra');
 const pluginStealth = require('puppeteer-extra-plugin-stealth');
+const fs = require('fs');
+
+let date = Date.now();
+let file = './out/typeform.'+date+'.json';
 
 (async () => {
   puppeteerExtra.use(pluginStealth());
@@ -30,10 +34,14 @@ const pluginStealth = require('puppeteer-extra-plugin-stealth');
   // Chargement du questionnaire
   await console.log('On attends que les réponses chargent');
 
-  const ajax = await page.on('response', response => {
+  page.on('response', response => {
     if (response.url().startsWith(config.url) && response.request().method() == 'GET' && response.ok()) {
-      console.log(response.url());
-      response.json().then(r => {console.log(r)})
+      console.log('On a la réponse de l\'api');
+      response.json().then(r => {
+        console.log('Écriture dans '+file);
+        fs.writeFileSync(file, JSON.stringify(r));
+        console.log('Fait !');
+      })
     }
   });
 
