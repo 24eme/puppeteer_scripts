@@ -8,7 +8,7 @@ const pluginStealth = require('puppeteer-extra-plugin-stealth');
   const browser = await puppeteerExtra.launch({ headless: false, defaultViewport: {height: 766, width: 1300} });
 
   const page = await browser.newPage();
-  await page.goto(config.url);
+  await page.goto(config.start_url, {waitUntil: 'networkidle0'});
 
   // Page de connexion
   await console.log('Page de connexion');
@@ -29,17 +29,14 @@ const pluginStealth = require('puppeteer-extra-plugin-stealth');
 
   // Chargement du questionnaire
   await console.log('On attends que les réponses chargent');
-  await page.waitForSelector('div.Container-sc-__sc-14tr3x4-0.giwdMR', {visible: true});
-  await page.waitForTimeout(10000);
 
-  await console.log('On récupère les divs qui correspondent à chaque répondant');
-  const answers = await page.evaluate(() => {
-    let divs = window.document.querySelectorAll('[data-qa-preview-index]');
-    console.log(divs.length)
-    return divs;
+  const ajax = await page.on('response', response => {
+    if (response.url().startsWith(config.url) && response.request().method() == 'GET' && response.ok()) {
+      console.log(response.url());
+      response.json().then(r => {console.log(r)})
+    }
   });
-  await console.log('Nombre de répondant : '+answers.length);
-  answers.forEach(function(item, index, array) { console.log(item, index) });
 
+  await page.waitForSelector('div.Container-sc-__sc-14tr3x4-0.giwdMR');
   await browser.close();
 })();
