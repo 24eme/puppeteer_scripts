@@ -30,13 +30,11 @@ function read_groups($groups)
 function read_questions($questions)
 {
     // a to z
-    $alpha = range('aa', 'zz');
-    $index = 1;
+    $index = 'a';
     foreach ($questions as $question) {
-        echo "\t".$alpha[$index - 1].'. '.$question->title.' ';
+        echo "\t".$index.'. '.$question->title.' ';
         yield $question;
 
-        if ($index === 26) {$index = 0;}
         $index++;
     }
 }
