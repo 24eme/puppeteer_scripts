@@ -20,8 +20,6 @@ function read_groups($groups)
     // 1 to 11
     $index = 1;
     foreach ($groups as $group) {
-        echo $index.'. '.$group->title;
-
         yield $group->group->answers;
 
         $index++;
@@ -60,9 +58,8 @@ function print_to_stdin($json)
     }
 }
 
-function print_to_csv($json)
+function print_csv_header($csv, $json)
 {
-    $csv = fopen('/tmp/a.csv', 'w+');
     $line = [];
     $alpha = 'a';
     $index = 1;
@@ -70,10 +67,7 @@ function print_to_csv($json)
     // headers
     foreach (read_groups($json->answers) as $questions) {
         foreach (read_questions($questions) as $answer) {
-            echo "$index$alpha: $answer->title;";
-
             $line[] = "$index$alpha: $answer->title";
-
             $alpha++; // a, b, c,... aa, ab,...
         }
 
@@ -82,27 +76,33 @@ function print_to_csv($json)
     }
 
     fputcsv($csv, $line, ';', '"');
-    $line = [];
-    $alpha = 'a';
-    $index = 1;
-
-    // answers
-    foreach (read_groups($json->answers) as $questions) {
-        foreach (read_questions($questions) as $answer) {
-            $type = $answer->type;
-
-            if ($type === 'multiple_choice') {
-                $vals = implode('|', $answer->$type->choices);
-                echo "$vals;";
-                $line[] = $vals;
-            } else {
-                echo $answer->$type->value.";";
-                $line[] = $answer->$type->value;
-            }
-        }
-    }
-    fputcsv($csv, $line, ';', '"');
-    fclose($csv);
 }
 
-print_to_csv($json);
+function print_to_csv($csv, $all)
+{
+    print_csv_header($csv, $all[0]);
+
+    // answers
+    foreach ($all as $json) {
+        $line = [];
+        foreach (read_groups($json->answers) as $questions) {
+            foreach (read_questions($questions) as $answer) {
+                $type = $answer->type;
+
+                if ($type === 'multiple_choice') {
+                    $vals = implode('|', $answer->$type->choices);
+                    $line[] = $vals;
+                } elseif ($type === 'file_upload') {
+                    $line[] = 'file';
+                } else {
+                    $line[] = $answer->$type->value;
+                }
+            }
+        }
+        fputcsv($csv, $line, ';', '"');
+    }
+}
+
+$csv = fopen('/tmp/a.csv', 'w+');
+print_to_csv($csv, $json);
+fclose($csv);
