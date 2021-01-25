@@ -20,9 +20,10 @@ function read_groups($groups)
     // 1 to 11
     $index = 1;
     foreach ($groups as $group) {
-        echo $index.'. '.$group->title.PHP_EOL;
+        echo $index.'. '.$group->title;
+
         yield $group->group->answers;
-        echo PHP_EOL;
+
         $index++;
     }
 }
@@ -30,23 +31,48 @@ function read_groups($groups)
 function read_questions($questions)
 {
     // a to z
-    $index = 'a';
     foreach ($questions as $question) {
-        echo "\t".$index.'. '.$question->title.' ';
         yield $question;
-
-        $index++;
     }
 }
 
-foreach (read_groups($json->answers) as $questions) {
-    foreach (read_questions($questions) as $answers) {
-        $type = $answers->type;
-        if ($type === 'multiple_choice') {
-            $vals = implode('|', $answers->$type->choices);
-            echo $vals.PHP_EOL;
-        } else {
-            echo $answers->$type->value.PHP_EOL;
+function print_to_stdin($json)
+{
+    $alpha = 'a';
+
+    foreach (read_groups($json->answers) as $questions) {
+        foreach (read_questions($questions) as $answers) {
+            echo "\t".$alpha.'. '.$answers->title.' ';
+            $type = $answers->type;
+
+            if ($type === 'multiple_choice') {
+                $vals = implode('|', $answers->$type->choices);
+                echo $vals.PHP_EOL;
+            } else {
+                echo $answers->$type->value.PHP_EOL;
+            }
+
+            $alpha++;
+        }
+
+        echo PHP_EOL;
+        $alpha = 'a';
+    }
+}
+
+function print_to_csv($json)
+{
+    foreach (read_groups($json->answers) as $questions) {
+        echo ';';
+    }
+
+    echo PHP_EOL;
+
+    foreach (read_groups($json->answers) as $questions) {
+        foreach (read_questions($questions) as $question) {
         }
     }
 }
+
+print_to_stdin($json);
+print_to_csv($json);
