@@ -62,17 +62,47 @@ function print_to_stdin($json)
 
 function print_to_csv($json)
 {
+    $csv = fopen('/tmp/a.csv', 'w+');
+    $line = [];
+    $alpha = 'a';
+    $index = 1;
+
+    // headers
     foreach (read_groups($json->answers) as $questions) {
-        echo ';';
+        foreach (read_questions($questions) as $answer) {
+            echo "$index$alpha: $answer->title;";
+
+            $line[] = "$index$alpha: $answer->title";
+
+            $alpha++; // a, b, c,... aa, ab,...
+        }
+
+        $alpha = 'a';
+        $index++; // 1, 2, 3...
     }
 
-    echo PHP_EOL;
+    fputcsv($csv, $line, ';', '"');
+    $line = [];
+    $alpha = 'a';
+    $index = 1;
 
+    // answers
     foreach (read_groups($json->answers) as $questions) {
-        foreach (read_questions($questions) as $question) {
+        foreach (read_questions($questions) as $answer) {
+            $type = $answer->type;
+
+            if ($type === 'multiple_choice') {
+                $vals = implode('|', $answer->$type->choices);
+                echo "$vals;";
+                $line[] = $vals;
+            } else {
+                echo $answer->$type->value.";";
+                $line[] = $answer->$type->value;
+            }
         }
     }
+    fputcsv($csv, $line, ';', '"');
+    fclose($csv);
 }
 
-print_to_stdin($json);
 print_to_csv($json);
