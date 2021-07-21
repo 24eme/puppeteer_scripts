@@ -25,11 +25,11 @@ let file = './out/typeform.'+date+'.json';
   await page.click('input[type="submit"]');
 
   await console.log('On attend que la page de liste des questionnaires apparaisse');
-  await page.waitForSelector('a.Link-sc-__sc-1bfji0h-0.responses-text__ButtonLink-sc-1yb3968-0.jhxRdb');
+  await page.waitForSelector('a.Link-sc-__sc-2xj0ye-0.responses-text__ButtonLink-sc-1yb3968-0.jaRkCo');
 
   // Page du choix de questionnaire
   await console.log('On clique sur notre questionnaire');
-  await page.click('a.Link-sc-__sc-1bfji0h-0.responses-text__ButtonLink-sc-1yb3968-0.jhxRdb');
+  await page.click('a.Link-sc-__sc-2xj0ye-0.responses-text__ButtonLink-sc-1yb3968-0.jaRkCo');
 
   // Chargement du questionnaire
   await console.log('On attends que les réponses chargent');
@@ -45,6 +45,6 @@ let file = './out/typeform.'+date+'.json';
     }
   });
 
-  await page.waitForSelector('div.Container-sc-__sc-14tr3x4-0.giwdMR');
+  await page.waitForSelector('div.Container-sc-__sc-1aileh0-0.fuWTZX');
   await browser.close();
 })();
