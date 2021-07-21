@@ -17,12 +17,12 @@ let file = './out/typeform.'+date+'.json';
   // Page de connexion
   await console.log('Page de connexion');
   await page.waitForTimeout(3000);
-  await page.waitForSelector('button.optanon-allow-all.accept-cookies-button');
-  await page.click('button.optanon-allow-all.accept-cookies-button')
-  await page.waitForSelector('#btnlogin');
-  await page.type('#email', config.login);
-  await page.type('#password', config.password);
-  await page.click('button[type=submit]#btnlogin');
+  await page.waitForSelector('button#onetrust-accept-btn-handler');
+  await page.click('button#onetrust-accept-btn-handler')
+  await page.waitForSelector('input[type="submit"]');
+  await page.type('input[name="username"]', config.login);
+  await page.type('input[name="password"]', config.password);
+  await page.click('input[type="submit"]');
 
   await console.log('On attend que la page de liste des questionnaires apparaisse');
   await page.waitForSelector('a.Link-sc-__sc-1bfji0h-0.responses-text__ButtonLink-sc-1yb3968-0.jhxRdb');
