@@ -45,6 +45,6 @@ let file = './out/typeform.'+date+'.json';
     }
   });
 
-  await page.waitForSelector('div.Container-sc-__sc-1aileh0-0.fuWTZX');
+  await page.waitForTimeout(60000);
   await browser.close();
 })();
