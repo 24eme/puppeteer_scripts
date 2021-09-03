@@ -9,7 +9,7 @@ let file = './out/typeform.'+date+'.json';
 
 (async () => {
   puppeteerExtra.use(pluginStealth());
-  const browser = await puppeteerExtra.launch({ headless: false, defaultViewport: {height: 766, width: 1300} });
+  const browser = await puppeteerExtra.launch({ headless: true, defaultViewport: {height: 766, width: 1300} });
 
   const page = await browser.newPage();
   await page.goto(config.start_url, {waitUntil: 'networkidle0'});
