@@ -12,6 +12,17 @@ let file = './out/typeform.'+date+'.json';
   const browser = await puppeteerExtra.launch({ headless: true, defaultViewport: {height: 766, width: 1300} });
 
   const page = await browser.newPage();
+  await page.setRequestInterception(true);
+
+  page.on('request', request => {
+    if (request.url().startsWith(config.url)) {
+      var data = {
+        url: request.url()+'&page_size=1000'
+      }
+      request.continue(data)
+    } else request.continue()
+  })
+
   await page.goto(config.start_url, {waitUntil: 'networkidle0'});
 
   // Page de connexion
