@@ -11,6 +11,7 @@ let file = './out/typeform.'+date+'.json';
   puppeteerExtra.use(pluginStealth());
   const browser = await puppeteerExtra.launch({ headless: true, defaultViewport: {height: 766, width: 1300} });
 
+  try {
   const page = await browser.newPage();
   await page.setRequestInterception(true);
 
@@ -57,5 +58,9 @@ let file = './out/typeform.'+date+'.json';
   });
 
   await page.waitForTimeout(60000);
-  await browser.close();
+  } catch (e) {
+    console.error(e);
+  } finally {
+    await browser.close();
+  }
 })();
