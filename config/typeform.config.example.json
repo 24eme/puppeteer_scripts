@@ -2,5 +2,6 @@
   "start_url" : "https://admin.typeform.com/login",
   "login" : "email@example.com",
   "password" : "password",
-  "url" : "https://api.typeform.com/responses/XXXXXXXX/view"
+  "url" : "https://api.typeform.com/responses/XXXXXXXX/view",
+  "form_id": "XXXXXXXX"
 }
