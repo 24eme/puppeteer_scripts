@@ -6,3 +6,6 @@ config/*.config.json
 node_modules/
 out/*
 !out/.gitkeep
+!out/screenshot/
+out/screenshot/*
+!out/screenshot/.gitkeep
