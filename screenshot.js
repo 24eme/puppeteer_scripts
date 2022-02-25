@@ -18,7 +18,7 @@ const file = './out/screenshot/'+place+'.jpg';
     result = await page.goto(config.base_url + place, {waitUntil: ["load","networkidle0"]})
 
     if (result.status() === 404 || result.status() === 500) {
-      throw ('Server responded: '+result.status()+' : '+result.statusText())
+      throw ('Server responded for ' + config.base_url + place + ' : '+result.status()+' : '+result.statusText());
     }
 
     await page.screenshot({path: file, fullPage: true})
