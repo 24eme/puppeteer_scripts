@@ -7,7 +7,7 @@ if (process.argv[2] === undefined) {
 }
 
 const place = process.argv[2]
-
+const topPage = process.argv[3]
 const file = './out/screenshot/'+place+'.jpg';
 
 (async () => {
@@ -23,13 +23,17 @@ const file = './out/screenshot/'+place+'.jpg';
       throw ('Server responded for ' + config.base_url + place + ' : '+result.status()+' : '+result.statusText());
     }
 
-    await page.waitForSelector('#section-localisation')
-    let screenshotHeight = await page.$('#section-localisation')
-    screenshotHeight = await screenshotHeight.boundingBox()
+    if (topPage) {
+      await page.waitForSelector('#section-localisation')
+      let screenshotHeight = await page.$('#section-localisation')
+      screenshotHeight = await screenshotHeight.boundingBox()
 
-    await page.screenshot({path: file, clip: {
-      x: 0, y: 0, width: 1920, height: screenshotHeight.y
-    }})
+      await page.screenshot({path: file, clip: {
+        x: 0, y: 0, width: 1920, height: screenshotHeight.y
+      }})
+    } else {
+      await page.screenshot({path: file, fullPage: true})
+    }
   } catch (e) {
     console.error(e)
     await browser.close()
