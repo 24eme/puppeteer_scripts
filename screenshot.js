@@ -21,6 +21,7 @@ const file = './out/screenshot/'+place+'.jpg';
       throw ('Server responded for ' + config.base_url + place + ' : '+result.status()+' : '+result.statusText());
     }
 
+    await page.emulateMediaType('print')
     await page.screenshot({path: file, fullPage: true})
   } catch (e) {
     console.error(e)
