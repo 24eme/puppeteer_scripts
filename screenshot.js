@@ -15,14 +15,21 @@ const file = './out/screenshot/'+place+'.jpg';
 
   try {
     const page = await browser.newPage();
+    await page.emulateMediaType('print')
+
     result = await page.goto(config.base_url + place, {waitUntil: ["load","networkidle0"]})
 
     if (result.status() === 404 || result.status() === 500) {
       throw ('Server responded for ' + config.base_url + place + ' : '+result.status()+' : '+result.statusText());
     }
 
-    await page.emulateMediaType('print')
-    await page.screenshot({path: file, fullPage: true})
+    await page.waitForSelector('#section-localisation')
+    let screenshotHeight = await page.$('#section-localisation')
+    screenshotHeight = await screenshotHeight.boundingBox()
+
+    await page.screenshot({path: file, clip: {
+      x: 0, y: 0, width: 1920, height: screenshotHeight.y
+    }})
   } catch (e) {
     console.error(e)
     await browser.close()
