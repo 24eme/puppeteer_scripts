@@ -34,6 +34,7 @@ let file = './out/typeform.'+date+'.json';
   await page.waitForSelector('input[type="submit"]');
   await page.type('input[name="username"]', config.login);
   await page.type('input[name="password"]', config.password);
+  await page.waitForTimeout(1000);
   await page.click('input[type="submit"]');
 
   await console.log('On attend que la page de liste des questionnaires apparaisse');
