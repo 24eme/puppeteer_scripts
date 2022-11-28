@@ -32,7 +32,16 @@ const dir = './out/screenshot/';
         x: 0, y: 0, width: 1920, height: screenshotHeight.y
       }})
     } else {
-      await page.screenshot({path: dir+place+'.jpg', fullPage: true})
+      const elements = await page.$$('section')
+      await page.setViewport( { 'width' : 1920 , 'height' : 10000} );
+      for (let i = 0; i < elements.length; i++){
+        try {
+          const id = await page.evaluate(el => el.id, elements[i])
+          await elements[i].screenshot({path: dir+place+'-'+i+'-'+id+'.jpg',type: 'jpeg',quality: 100})
+        } catch(e) {
+          console.log(`Error section ${i} : `,  e)
+        }
+      }
     }
   } catch (e) {
     console.error(e)
