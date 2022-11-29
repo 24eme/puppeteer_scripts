@@ -36,7 +36,7 @@ const dir = './out/screenshot/';
       await page.setViewport( { 'width' : 1920 , 'height' : 10000} );
       for (let i = 0; i < elements.length; i++){
         try {
-          const id = await page.evaluate(el => el.dataset.spy, elements[i])
+          const id = await page.evaluate(el => el.dataset.spy.replace(" ", '_'), elements[i])
           await elements[i].screenshot({path: dir+place+'-'+i+'-'+id+'.jpg',type: 'jpeg',quality: 100})
         } catch(e) {
           console.log(`Error section ${i} : `,  e)
